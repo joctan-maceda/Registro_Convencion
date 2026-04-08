@@ -1,4 +1,4 @@
-#lista-nombres #lista-sociedades {
+#lista-nombres #lista-iglesias {
     border: 1px solid #ccc;
     max-height: 300px;
     overflow-y: auto;
@@ -15,7 +15,7 @@
     background-color: rgb(197, 223, 226);
   }
 
-  #lista-sociedades {
+  #lista-iglesias {
     border: 1px solid #ccc;
     max-height: 300px;
     overflow-y: auto;
@@ -24,11 +24,11 @@
     width: 500px;
     z-index: 100;
   }
-  #lista-sociedades div {
+  #lista-iglesias div {
     padding: 5px;
     cursor: pointer;
   }
-  #lista-sociedades div:hover {
+  #lista-iglesias div:hover {
     background-color: rgb(197, 223, 226);
   }
 

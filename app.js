@@ -4,7 +4,7 @@ $(document).ready(function(){
     let edit = false;
     $('#delegado-result').hide();
     $('#lista-nombres').hide();
-    $('#lista-sociedades').hide();                    
+    $('#lista-iglesias').hide();                    
 // VERIFICAMOS EN PÁGINA ESTAMOS ACTUALMENTE
     const paginaActual = $('body').data('pagina'); 
 
@@ -67,8 +67,8 @@ $(document).ready(function(){
                         contador += delegado.cuota;
                         // SE CREA UNA LISTA HTML CON LA DESCRIPCIÓN DEL PRODUCTO
                         let descripcion = '';
-                        descripcion += ''+delegado.categoria+"      ";
-                        descripcion += "     "+delegado.sociedad+"     ";
+                        descripcion += ''+delegado.cargo+"      ";
+                        descripcion += "     "+delegado.edad+"     ";
                         descripcion += ",    "+delegado.iglesia+"     ";
                         descripcion += ",   "+delegado.domicilio+'';
                     
@@ -112,27 +112,22 @@ $(document).ready(function(){
                         totalDelegados++; // Contador de delegados
                         totalCuotas += parseFloat(delegado.cuota);
                         // Agrupación por tipo de delegado
-                        if (!resumenPorTipo[delegado.tipodelegado]) {
-                            resumenPorTipo[delegado.tipodelegado] = {
+                        if (!resumenPorTipo[delegado.cargo]) {
+                            resumenPorTipo[delegado.cargo] = {
                                 cantidad: 0,
                                 cuotas: 0
                             };
                         }
 
-                        if (delegado.categoria === "SAEC" || delegado.categoria === "SJEC" || delegado.categoria === "SInfEC" || delegado.categoria === "SIEC" || delegado.categoria === "SMEC" ){
-                            sociedadesUnicas.add(delegado.categoria + " " +delegado.sociedad);
-                        }else{
-                            gruposUnicos.add(delegado.categoria + " " +delegado.sociedad);
-                        }
 
-                        resumenPorTipo[delegado.tipodelegado].cantidad++;
-                        resumenPorTipo[delegado.tipodelegado].cuotas += parseFloat(delegado.cuota);
-                        let descripcion = `${delegado.categoria} ${delegado.sociedad}, ${delegado.iglesia}, ${delegado.domicilio}`;
+                        resumenPorTipo[delegado.cargo].cantidad++;
+                        resumenPorTipo[delegado.cargo].cuotas += parseFloat(delegado.cuota);
+                        let descripcion = `${delegado.cargo} ${delegado.edad}, ${delegado.iglesia}, ${delegado.domicilio}`;
 
                         template += `
                             <tr delegadoID="${delegado.id}">
                                 <td>${delegado.id}</td>
-                                <td>${delegado.tipodelegado}</td>
+                                <td>${delegado.cargo}</td>
                                 <td>${delegado.nombre}</td>
                                 <td>${descripcion}</td>
                                 <td>${delegado.cuota}</td>
@@ -167,8 +162,6 @@ $(document).ready(function(){
                     // Mostrar resumen debajo de la tabla
                     $('#resumenDelegados').html(resumenHTML);
                 }
-                console.log(sociedadesUnicas);
-                console.log(gruposUnicos);
             }
         });
     }
@@ -191,18 +184,28 @@ $(document).ready(function(){
    
                 // Se hacen diferentes tablas, dependiendo el tipo de delegado.
                     delegados.forEach(delegado => {
-                        if (delegado.tipodelegado === "Oficial"){
-                            agregarDelegadoATabla('Oficiales', delegado);
-                        }else if( delegado.tipodelegado === "Fraternal"){
-                            agregarDelegadoATabla('Fraternales', delegado);
-                        }else if (delegado.tipodelegado === "Visita"){
-                            agregarDelegadoATabla('Visitas', delegado);
-                        }else if (delegado.tipodelegado === "Consejeros y Superintendentes"){
-                            agregarDelegadoATabla('Consejeros', delegado);
-                        }else if (delegado.tipodelegado === "Representantes de Uniones"){
-                            agregarDelegadoATabla('RepresentantesU', delegado);
+                        if (delegado.cargo === "Congregante"){
+                            agregarDelegadoATabla('Congregante', delegado);
+                        }else if( delegado.cargo === "Niño"){
+                            agregarDelegadoATabla('Niño', delegado);
+                        }else if (delegado.cargo === "Ministro"){
+                            agregarDelegadoATabla('Ministro', delegado);
+                        }else if (delegado.cargo === "H. Consistorio"){
+                            agregarDelegadoATabla('Consistorio', delegado);
+                        }else if (delegado.cargo === "Diacono"){
+                            agregarDelegadoATabla('Diacono', delegado);
+                        }else if( delegado.cargo === "Licenciado Predicador"){
+                            agregarDelegadoATabla('Licenciado', delegado);
+                        }else if (delegado.cargo === "Misionera"){
+                            agregarDelegadoATabla('Misionera', delegado);
+                        }else if (delegado.cargo === "Estudiante para Misionera"){
+                            agregarDelegadoATabla('EMisionera', delegado);
+                        }else if (delegado.cargo === "Estudiante Seminarista"){
+                            agregarDelegadoATabla('Seminarista', delegado);
+                        }else if (delegado.cargo === "R. Sociedades Femeniles"){
+                            agregarDelegadoATabla('Femeniles', delegado);
                         }else{
-                            agregarDelegadoATabla('PersonalRP', delegado);
+                            agregarDelegadoATabla('Esfuerzo', delegado);
                         }
                     });
                 }
@@ -216,7 +219,7 @@ $(document).ready(function(){
         const fila = document.createElement('tr');
 
         let descripcion = '';
-        descripcion += delegado.categoria + ' ' + delegado.sociedad + ', ' + delegado.iglesia + ', ' + delegado.domicilio;
+        descripcion += delegado.cargo + ' ' + delegado.telefono + ', ' + delegado.iglesia + ', ' + delegado.domicilio;
 
         let selects = '';
         for (let i = 1; i <= 6; i++) {
@@ -323,11 +326,11 @@ $(document).ready(function(){
                     delegados.forEach(delegado => {
                         // SE CREA UNA LISTA HTML CON LA DESCRIPCIÓN DEL PRODUCTO
                         let descripcion = '';
-                        descripcion += '<li>CATEGORIA:  '+delegado.categoria+'</li>';
-                        descripcion += '<li>SOCIEDAD:  '+delegado.sociedad+'</li>';
+                        descripcion += '<li>CARGO:  '+delegado.cargo+'</li>';
+                        descripcion += '<li>TELEFONO:  '+delegado.telefono+'</li>';
                         descripcion += '<li>IGLESIA:  '+delegado.iglesia+'</li>';
                         descripcion += '<li>DOMICILIO:  '+delegado.domicilio+'</li>';
-                        descripcion += '<li>TIPO DELEGADO: <strong> '+delegado.tipodelegado+'</strong></li>';
+                        descripcion += '<li>EDAD:  '+delegado.edad+'</li>';
                     
                         template += `
                             <tr delegadoID="${delegado.id}">
@@ -358,7 +361,7 @@ $(document).ready(function(){
         if ($('#name').val()) {
             let search = $('#name').val();
             $.ajax({
-                url: './backend/delegados-search_miembros_ec.php?name=' + encodeURIComponent(search),
+                url: './backend/delegados-search_miembros.php?name=' + encodeURIComponent(search),
                 data: { search },
                 type: 'GET',
                 success: function (response) {
@@ -372,7 +375,7 @@ $(document).ready(function(){
                                 nombres += `
                                     <div class="opcion-nombre" data-nombre="${delegado.nombre}">
                                         <strong>${delegado.nombre}</strong><br>
-                                        <small>${delegado.categoria} | "${delegado.sociedad}", ${delegado.iglesia}</small><br>
+                                        <small>${delegado.cargo} | "${delegado.iglesia}", ${delegado.telefono}</small><br>
                                         <small>${delegado.domicilio}</small>
                                     </div>
                                 `;
@@ -409,14 +412,19 @@ $(document).ready(function(){
             // En caso de que se obtenga un respuesta, se insertan los datos en los diferentes campos.
             try {
                 let delegado = JSON.parse(response);
+
                 $('#name').val(delegado.nombre);
+                // EL ID SE INSERTA EN UN CAMPO OCULTO PARA USARLO DESPUÉS PARA LA ACTUALIZACIÓN
                 $('#delegadoID').val(delegado.id);
-                $('#categoria').val(delegado.categoria);
-                $('#sociedad').val(delegado.sociedad);
+                // SE ELIMINA nombre, eliminado E id PARA PODER MOSTRAR EL JSON EN EL <textarea>
+                $('#cargo').val(delegado.cargo);
+                $('#sexo').val(delegado.sexo);
                 $('#iglesia').val(delegado.iglesia);
                 $('#domicilio').val(delegado.domicilio);
-                $('#tipodelegado').val(delegado.tipodelegado);
+                $('#telefono').val(delegado.telefono);
+                $('#edad').val(delegado.edad);
                 $('#cuota').val(delegado.cuota);
+
             } catch (e) {
                 console.error("Error al parsear respuesta del delegado:", response);
             }
@@ -428,62 +436,59 @@ $(document).ready(function(){
     ///////////////////////////////////////////////////////////
 
     // Escucha los cambios hechos en el input sociedad.
-    $('#sociedad').on('keyup', function () {
+    $('#iglesia').on('keyup', function () {
         // Si tiene datos el input, entonces...
-        if ($('#sociedad').val()) {
-            let search = $('#sociedad').val();
+        if ($('#iglesia').val()) {
+            let search = $('#iglesia').val();
             $.ajax({
-                url: './backend/delegados-search_sociedades.php?sociedad=' + encodeURIComponent(search),
+                url: './backend/delegados-search_iglesia.php?iglesia=' + encodeURIComponent(search),
                 data: { search },
                 type: 'GET',
                 success: function (response) {
                     try {
-                        const sociedades = JSON.parse(response);
-                        if (sociedades.length > 0) {
+                        const iglesias = JSON.parse(response);
+                        if (iglesias.length > 0) {
                             let nombres = '';
-                            sociedades.forEach(sociedad => {
+                            iglesias.forEach(iglesia => {
                                 // Para cada sociedad obtenida, se hace un template con diferentes datos.
                                 // Se pone varios datos para verse en el div, pero solo se envia el dato de la sociedad.
                                 nombres += `
-                                    <div class="opcion-sociedad" data-sociedad="${sociedad.sociedad}">
-                                        <strong>${sociedad.sociedad}</strong><br>
-                                        <small>${sociedad.categoria} | ${sociedad.iglesia}</small><br>
-                                        <small>${sociedad.domicilio}</small>
+                                    <div class="opcion-iglesia" data-iglesia="${iglesia.iglesia}">
+                                        <strong>${iglesia.categoria} | ${iglesia.iglesia}</strong><br>
+                                        <small>${iglesia.domicilio}</small>
                                     </div>
                                 `;
                             });
-                            $('#lista-sociedades').html(nombres).show();
+                            $('#lista-iglesias').html(nombres).show();
                         } else {
-                            $('#lista-sociedades').hide();
+                            $('#lista-iglesias').hide();
                         }
                     } catch (e) {
                         console.error("Respuesta no es JSON válido:", response);
-                        $('#lista-sociedades').hide();
+                        $('#lista-iglesias').hide();
                     }
                 },
                 error: function (xhr, status, error) {
                     console.error("Error AJAX:", error);
-                    $('#lista-sociedades').hide();
+                    $('#lista-iglesias').hide();
                 }
             });
         } else {
-            $('#lista-sociedades').hide();
+            $('#lista-iglesias').hide();
         }
     });
 
     // Escucha cuando se hace click en alguna opcion que se genera en el input sociedad.
-    $(document).on('click', '.opcion-sociedad', function () {
-        let nombresociedad = $(this).data('sociedad');
-        $('#sociedad').val(nombresociedad);
-        $('#lista-sociedades').hide();
-        console.log(nombresociedad);
-        $.post('./backend/delegados-sociedades.php', { nombresociedad }, (response) => {
+    $(document).on('click', '.opcion-iglesia', function () {
+        let nombreiglesia = $(this).data('iglesia');
+        $('#iglesia').val(nombreiglesia);
+        $('#lista-iglesias').hide();
+        console.log(nombreiglesia);
+        $.post('./backend/delegados-iglesias.php', { nombreiglesia }, (response) => {
             try {
-                let sociedad = JSON.parse(response);
-                $('#categoria').val(sociedad.categoria);
-                $('#sociedad').val(sociedad.sociedad);
-                $('#iglesia').val(sociedad.iglesia);
-                $('#domicilio').val(sociedad.domicilio);
+                let iglesia = JSON.parse(response);
+                $('#iglesia').val(iglesia.categoria + " " +iglesia.iglesia);
+                $('#domicilio').val(iglesia.domicilio);
             } catch (e) {
                 console.error("Error al parsear respuesta del delegado:", e);
                 console.log("Respuesta recibida:", response);
@@ -567,15 +572,15 @@ $(document).ready(function(){
 
     $('#delegado-form').submit(e => {
         e.preventDefault();
-        console.log($('#cuota').val());
         let postData = {
             nombre: $('#name').val(),
             id: $('#delegadoID').val(),
-            categoria: $('#categoria').val(),
-            sociedad: $('#sociedad').val(),
+            cargo: $('#cargo').val(),            
             iglesia: $('#iglesia').val(),
             domicilio: $('#domicilio').val(),
-            tipodelegado: $('#tipodelegado').val(),
+            sexo: $('#sexo').val(),
+            telefono: $('#telefono').val(),
+            edad: $('#edad').val(),
             cuota: $('#cuota').val()
         };
 
@@ -593,11 +598,12 @@ $(document).ready(function(){
                     `;
             // SE REINICIA EL FORMULARIO
             $('#name').val('');
-            $('#categoria').val('');
-            $('#sociedad').val('');
+            $('#cargo').val('');
+            $('#sexo').val('');
             $('#iglesia').val('');
             $('#domicilio').val('');
-            $('#tipodelegado').val('');
+            $('#telefono').val('');
+            $('#edad').val('');
             $('#cuota').val('');
             // SE HACE VISIBLE LA BARRA DE ESTADO
             $('#delegado-result').show();
@@ -614,42 +620,19 @@ $(document).ready(function(){
     //////////////// Verificacion de Cuotas ///////////////////
     ///////////////////////////////////////////////////////////
     
-    $('#categoria').on('change', function(){
-        let categoria = $(this).val();
-        console.log(categoria);
-        if (categoria === "SInfEC" || categoria === "GInfEC" ){
-            $('#cuota').val(250);
-        }else if (categoria === ""){
+    $('#cargo').on('change', function(){
+        let cargo = $(this).val();
+        console.log(cargo);
+        if (cargo === "Niño"){
+            $('#cuota').val(150);
+        }else if (cargo === "Ministro" || cargo === "Licenciado Predicador" || cargo === "Misionera" || cargo === "Estudiante para Misionera" || cargo === "Estudiante Seminarista"){
             $('#cuota').val(0);
+        }else{
+             $('#cuota').val(375);
         }
     });
 
-    $('#tipodelegado').on('change', function(){
-        let tipodelegado = $(this).val();
-        let categoria = $('#categoria').val();
-        if ((tipodelegado === "Fraternal" || tipodelegado === "Visita") && 
-            (categoria === "SInfEC" || categoria === "GInfEC")) {
-            
-            $('#cuota').val(250);
-
-        } else if ((tipodelegado === "Oficial") && 
-            (categoria === "SInfEC" || categoria === "GInfEC")) {
-            
-            $('#cuota').val(225);
-
-        }else if (tipodelegado === "Fraternal" || tipodelegado === "Consejeros y Superintendentes") {
-            $('#cuota').val(500);
-
-        } else if (tipodelegado === "Oficial") {
-            $('#cuota').val(450);
-
-        } else if (tipodelegado === "Visita") {
-            $('#cuota').val(500);
-
-        } else {
-            $('#cuota').val(0);
-        }
-    });
+   
 
     ///////////////////////////////////////////////////////////
     ///////// Eventos en el formulario #delegado-form /////////
@@ -693,11 +676,12 @@ $(document).ready(function(){
             // EL ID SE INSERTA EN UN CAMPO OCULTO PARA USARLO DESPUÉS PARA LA ACTUALIZACIÓN
             $('#delegadoID').val(delegado.id);
             // SE ELIMINA nombre, eliminado E id PARA PODER MOSTRAR EL JSON EN EL <textarea>
-            $('#categoria').val(delegado.categoria);
-            $('#sociedad').val(delegado.sociedad);
+            $('#cargo').val(delegado.cargo);
+            $('#sexo').val(delegado.sexo);
             $('#iglesia').val(delegado.iglesia);
             $('#domicilio').val(delegado.domicilio);
-            $('#tipodelegado').val(delegado.tipodelegado);
+            $('#telefono').val(delegado.telefono);
+            $('#edad').val(delegado.edad);
             $('#cuota').val(delegado.cuota);
             
             // SE PONE LA BANDERA DE EDICIÓN EN true

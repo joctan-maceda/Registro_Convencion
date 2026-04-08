@@ -2,7 +2,7 @@
 namespace Backend;
 include_once __DIR__.'/Delegados.php';
 $delegado = new Delegados();
-$delegado->search_sociedades($_GET['search']);
+$delegado->search_iglesias($_GET['search']);
 ob_clean();
 header('Content-Type: application/json; charset=utf-8');
 

@@ -6,7 +6,7 @@ require_once 'DataBase.php';
 class Delegados extends DataBase {
     protected $response;
 
-    public function __construct($dbName = 'registro_ec', $user = 'root', $password = '') {
+    public function __construct($dbName = 'convencion', $user = 'root', $password = '') {
         $this->response = null;
         parent::__construct($user, $password, $dbName);
     }
@@ -78,7 +78,7 @@ class Delegados extends DataBase {
             if (is_object($result) && $result->num_rows == 0) {
                 $this->conexion->set_charset("utf8");
 
-                $sql = "INSERT INTO delegados VALUES (null, '{$delegadoData->nombre}', '{$delegadoData->categoria}', '{$delegadoData->sociedad}', '{$delegadoData->iglesia}', '{$delegadoData->domicilio}', '{$delegadoData->tipodelegado}',{$delegadoData->cuota}, 0)";
+                $sql = "INSERT INTO delegados VALUES (null, '{$delegadoData->nombre}', '{$delegadoData->cargo}', '{$delegadoData->iglesia}', '{$delegadoData->domicilio}', '{$delegadoData->sexo}', '{$delegadoData->telefono}','{$delegadoData->edad}',{$delegadoData->cuota},0, 0)";
                 
                 if ($this->query($sql)) {
                     $data['status'] = "success";
@@ -133,11 +133,12 @@ class Delegados extends DataBase {
             // Construye la consulta de actualización
             $sql = "UPDATE delegados SET 
                         nombre = '{$delegadoData->nombre}', 
-                        categoria = '{$delegadoData->categoria}', 
-                        sociedad = '{$delegadoData->sociedad}', 
+                        cargo = '{$delegadoData->cargo}',                         
                         iglesia = '{$delegadoData->iglesia}', 
                         domicilio = '{$delegadoData->domicilio}', 
-                        tipodelegado = '{$delegadoData->tipodelegado}', 
+                        sexo = '{$delegadoData->sexo}', 
+                        telefono = '{$delegadoData->telefono}', 
+                        edad = '{$delegadoData->edad}',                         
                         cuota = {intval($delegadoData->cuota)}
                     WHERE id = {$delegadoData->id} AND eliminado = 0";
     
@@ -230,7 +231,7 @@ class Delegados extends DataBase {
         $data = array();
     
         // Construye la consulta para buscar en múltiples campos
-        $sql = "SELECT * FROM delegados WHERE (id = '{$search}' OR nombre LIKE '%{$search}%' OR sociedad LIKE '%{$search}%') AND eliminado = 0";
+        $sql = "SELECT * FROM delegados WHERE (id = '{$search}' OR nombre LIKE '%{$search}%' OR iglesia LIKE '%{$search}%') AND eliminado = 0";
         $result = $this->query($sql);
     
         // Verifica si hubo resultados y procesa los datos
@@ -255,12 +256,12 @@ class Delegados extends DataBase {
         $this->response = $data;
     }
 
-    public function search_sociedades($search) {
+    public function search_iglesias($search) {
         // Inicializa el arreglo de respuesta
         $data = array();
     
         // Construye la consulta para buscar en múltiples campos
-        $sql = "SELECT * FROM sociedades WHERE (sociedad LIKE '%{$search}%')";
+        $sql = "SELECT * FROM iglesias WHERE (iglesia LIKE '%{$search}%')";
         $result = $this->query($sql);
     
         // Verifica si hubo resultados y procesa los datos
@@ -291,7 +292,7 @@ class Delegados extends DataBase {
         $data = array();
     
         // Construye la consulta para buscar en múltiples campos
-        $sql = "SELECT * FROM miembros_ec WHERE (nombre LIKE '%{$search}%') AND eliminado = 0";
+        $sql = "SELECT * FROM feligreses WHERE (nombre LIKE '%{$search}%')";
         $result = $this->query($sql);
     
         // Verifica si hubo resultados y procesa los datos
@@ -315,64 +316,10 @@ class Delegados extends DataBase {
         // Almacena el resultado en response para luego poder usar getData()
         $this->response = $data;
     }
-/*
-    public function search_sociedades($search) {
-        $data = array();
-
-        // Prepara la consulta con un placeholder (?)
-        $stmt = $this->conexion->prepare("SELECT * FROM sociedades WHERE sociedad LIKE CONCAT('%', ?, '%')");
-
-        if ($stmt === false) {
-            $this->response = [
-                'error' => true,
-                'message' => 'Error al preparar la consulta: ' . $this->conexion->error
-            ];
-            return;
-        }
-        // Une el parámetro a la consulta
-        $stmt->bind_param("s", $search);
-
-        // Ejecuta la consulta
-        if (!$stmt->execute()) {
-            $this->response = [
-                'error' => true,
-                'message' => 'Error al ejecutar la consulta: ' . $stmt->error
-            ];
-            return;
-        }
-
-
-        // Obtiene el resultado
-        $result = $stmt->get_result();
-
-        if ($result && $result->num_rows > 0) {
-            $rows = $result->fetch_all(MYSQLI_ASSOC);
-
-            if (!is_null($rows)) {
-                foreach ($rows as $num => $row) {
-                    foreach ($row as $key => $value) {
-                        $data[$num][$key] = $value;
-                    }
-                }
-            }
-            $result->free();
-        } else {
-            // Podrías no morir aquí, sino retornar array vacío
-            // die('Error en la consulta: ' . $this->conexion->error);
-            $data = [];
-        }
-
-        // Almacena la respuesta
-        $this->response = $data;
-
-        // Cierra el statement
-        $stmt->close();
-    }
-*/
     
     public function miembros_ec($nombreSeleccionado){
         $data = array();
-        $sql = "SELECT * FROM miembros_ec WHERE nombre = '{$nombreSeleccionado}' ";
+        $sql = "SELECT * FROM feligreses WHERE nombre = '{$nombreSeleccionado}' ";
         $result = $this->query($sql);
         if (is_object($result) && $result->num_rows > 0) {
             $row = $result->fetch_assoc();
@@ -390,9 +337,9 @@ class Delegados extends DataBase {
         $this->response = $data;
     }
 
-    public function sociedades($nombreSeleccionado){
+    public function iglesias($nombreSeleccionado){
         $data = array();
-        $sql = "SELECT * FROM sociedades WHERE sociedad = '{$nombreSeleccionado}' ";
+        $sql = "SELECT * FROM iglesias WHERE iglesia = '{$nombreSeleccionado}' ";
         $result = $this->query($sql);
         if (is_object($result) && $result->num_rows > 0) {
             $row = $result->fetch_assoc();
